@@ -69,7 +69,7 @@ function ModalNft({ nft, keyModal, showElementNFT }) {
         const NFTs = Moralis.Object.extend("NFTs");
         const newNFTs = new NFTs();
         newNFTs.set("minter_address", user.attributes.ethAddress);
-        newNFTs.set("collection", "NFTapp");
+        newNFTs.set("collection", "BlackBuzz");
         newNFTs.set("symbol", "Tap");
         newNFTs.set(
           "token_address",

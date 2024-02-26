@@ -28,7 +28,7 @@ const Item_details = () => {
                   <img src="/images/logo_black.png" className="logo_money" />
                 </span>
                 <span className="text-green text-sm font-medium tracking-tight">
-                  0 $TAP
+                  0 $Buzz Coin
                 </span>
               </div>
               <span className="dark:text-jacarta-300 text-jacarta-400 text-sm">
@@ -71,7 +71,7 @@ const Item_details = () => {
                     <img src="/images/logo_black.png" className="logo_money" />
                   </span>
                   <span className="text-green text-lg font-medium leading-tight tracking-tight">
-                    0 $TAP
+                    0 $Buzz Coin
                   </span>
                 </div>
               </div>

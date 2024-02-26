@@ -423,7 +423,7 @@ const NftItem = ({ nft, tokenId, contract, history }) => {
 
                 <div className="mb-8 flex items-center space-x-4 whitespace-nowrap">
                   <div className="flex items-center">
-                    <Tippy content={<span>$TAP</span>}>
+                    <Tippy content={<span>$Buzz Coin</span>}>
                       <span className=" dark:border-jacarta-600 border-jacarta-100 flex items-center whitespace-nowrap rounded-md  py-1 px-2 -ml-1 mr-1">
                         <img
                           src="/images/logo_black.png"
@@ -433,7 +433,7 @@ const NftItem = ({ nft, tokenId, contract, history }) => {
                       </span>
                     </Tippy>
                     <span className="text-green text-sm font-medium tracking-tight">
-                      {nft?.valor} $TAP
+                      {nft?.valor} $Buzz Coin
                     </span>
                   </div>
                   <span className="dark:text-jacarta-300 text-jacarta-400 text-sm">
@@ -545,7 +545,7 @@ const NftItem = ({ nft, tokenId, contract, history }) => {
                       <div className="mt-3 flex">
                         <div>
                           <div className="flex items-center whitespace-nowrap">
-                            <Tippy content={<span>$TAP</span>}>
+                            <Tippy content={<span>$Buzz Coin</span>}>
                               <span className=" dark:border-jacarta-600 border-jacarta-100 flex items-center whitespace-nowrap rounded-md  py-1 px-2 -ml-1 mr-1">
                                 <img
                                   src="/images/logo_black.png"
@@ -555,7 +555,7 @@ const NftItem = ({ nft, tokenId, contract, history }) => {
                               </span>
                             </Tippy>
                             <span className="text-green text-lg font-medium leading-tight tracking-tight">
-                              {nft?.valor} $TAP
+                              {nft?.valor} $Buzz Coin
                             </span>
                           </div>
                         </div>

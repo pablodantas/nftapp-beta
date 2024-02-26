@@ -2993,11 +2993,11 @@ html {
 		fill: #D1D5DB;
 	}
 	.fill-accent {
-		fill: #8358ff;
+		fill: #edb70b;
 	}
 
 	.stroke-accent {
-		stroke: #8358ff;
+		stroke: #edb70b;
 	}
 
 	.fill-current {
@@ -4599,7 +4599,7 @@ html {
 	}
 
 	.group:hover .group-hover\:fill-accent {
-		fill: #8358ff;
+		fill: #edb70b;
 	}
 
 	.group:hover .group-hover\:text-accent {

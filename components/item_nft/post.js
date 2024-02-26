@@ -282,7 +282,7 @@ const PostItem = ({ postBy, tokenId }) => {
 
                 <div className="mb-8 flex items-center space-x-4 whitespace-nowrap">
                   <div className="flex items-center">
-                    <Tippy content={<span>$TAP</span>}>
+                    <Tippy content={<span>$Buzz Coin</span>}>
                       <span className=" dark:border-jacarta-600 border-jacarta-100 flex items-center whitespace-nowrap rounded-md  py-1 px-2 -ml-1 mr-1">
                         <img
                           src="/images/logo_black.png"

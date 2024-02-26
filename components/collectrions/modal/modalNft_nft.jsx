@@ -215,7 +215,7 @@ function ModalNft({ nft, keyModal, showElementNFT }) {
                           <img src="/images/logo_black.png" className="w-5" />
                         </span>
                         <span className="font-display text-jacarta-700 text-sm">
-                          $TAP
+                          $Buzz Coin
                         </span>
                       </div>
                     </div>

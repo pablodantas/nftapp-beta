@@ -165,7 +165,7 @@ const NftAnuncio = ({ nft, itemI }) => {
       } else if (nft?.linkmarketplace.includes("zora.co")) {
         setMarketplaceAtual("Zora");
       } else {
-        setMarketplaceAtual("NFTapp");
+        setMarketplaceAtual("BlackBuzz");
       }
     }
   }, [nft]);

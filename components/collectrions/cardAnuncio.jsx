@@ -100,7 +100,7 @@ const CardAnuncio = ({ keyPryme }) => {
       } else if (item[0]?.linkmarketplace.includes("zora.co")) {
         setMarketplaceAtual("Zora");
       } else {
-        setMarketplaceAtual("NFTapp");
+        setMarketplaceAtual("BlackBuzz");
       }
     }
   }, [item]);
