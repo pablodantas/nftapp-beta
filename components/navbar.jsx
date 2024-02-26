@@ -147,7 +147,7 @@ const Navbar = () => {
                       <img
                         src="/images/socialverse.png"
                         className="logo_img logo_img_resp h-auto hidden dark:block"
-                        alt="Socialverse | NFT Marketplace"
+                        alt="BlackBuzz | NFT Marketplace"
                       />
                       <p className="logo_name hidden logo_name_resp dark:block">
                         BlackBuzz
@@ -181,7 +181,7 @@ const Navbar = () => {
                   <img
                     src="/images/socialverse.png"
                     className="logo_img logo_img_resp h-auto hidden dark:block"
-                    alt="Socialverse | NFT Marketplace"
+                    alt="BlackBuzz | NFT Marketplace"
                   />
                   <p className="logo_name hidden logo_name_resp dark:block">
                     BlackBuzz
@@ -456,7 +456,7 @@ const Navbar = () => {
                 <img
                   src="/images/socialverse.png"
                   className="logo_img h-auto hidden dark:block"
-                  alt="Socialverse | NFT Marketplace"
+                  alt="BlackBuzz | NFT Marketplace"
                 />
                 <p className="logo_name hidden dark:block" translate="no">
                   BlackBuzz

@@ -103,7 +103,7 @@ const Auctions_categories = () => {
                 <div className="mb-2 flex items-center row bg-gray-200 dark:bg-gray-700 rounded-pill w-fit p-0.5 pr-3">
                   <div className="col-auto rounded-pill p-0.5 flex items-center bg-gray-100 dark:bg-gray-600">
                     <img src="/images/socialverse.png" className="w-5 h-5 mr-2 ml-0.5" alt="" />
-                  <p className="font-medium mr-2 text-accent dark:text-accent-lighter">TAP</p>
+                  <p className="font-medium mr-2 text-accent dark:text-accent-lighter">Buzz Coin</p>
                   </div>
                   <div className="col ml-2 font-medium text-dark dark:text-white">
                     69,691
@@ -201,7 +201,7 @@ const Auctions_categories = () => {
                 <div className="mb-2 flex items-center row bg-gray-200 dark:bg-gray-700 rounded-pill w-fit p-0.5 pr-3">
                   <div className="col-auto rounded-pill p-0.5 flex items-center bg-gray-100 dark:bg-gray-600">
                     <img src="/images/socialverse.png" className="w-5 h-5 mr-2 ml-0.5" alt="" />
-                  <p className="font-medium mr-2 text-accent dark:text-accent-lighter">TAP</p>
+                  <p className="font-medium mr-2 text-accent dark:text-accent-lighter">Buzz Coin</p>
                   </div>
                   <div className="col ml-2 font-medium text-dark dark:text-white">
                     4,500
@@ -281,7 +281,7 @@ const Auctions_categories = () => {
                   <h2 className="font-display text-jacarta-700 dark:hover:text-accent hover:text-accent mb-4 text-xl dark:text-white">
                     <Link href={``}>
                       <a href="/single_post/post_1">
-                        #1 Investidor Socialverse
+                        #1 Investidor BlackBuzz
                       </a>
                     </Link>
                   </h2>

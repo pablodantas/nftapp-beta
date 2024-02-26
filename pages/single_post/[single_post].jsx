@@ -17,7 +17,7 @@ const Single_post = () => {
 	return (
 		<>
 		<div>
-			<Meta title={`${pid} ||  Socialverse Marketplace`} />
+			<Meta title={`${pid} ||  BlackBuzz Marketplace`} />
 
 			<div className="pt-[5.5rem] lg:pt-24">
 				{/* <!-- Post --> */}

@@ -12,7 +12,7 @@ import Item_details from '../../components/categories/item_details';
 const Home_4 = () => {
 	return (
 		<>
-			<Meta title="Socialverse" />
+			<Meta title="BlackBuzz" />
 			<Hero5 />
 			<Process />
 			<CoverflowCarousel />

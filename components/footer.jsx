@@ -15,10 +15,10 @@ const footer = () => {
                   <img
                     src="/images/socialverse.png"
                     className="logo_img h-auto  dark:block"
-                    alt="Socialverse | NFT Marketplace"
+                    alt="BlackSale | NFT Marketplace"
                   />
-                  <p className="logo_name hidden dark:block">Socialverse</p>
-                  <p className="logo_name_light dark:hidden">Socialverse</p>
+                  <p className="logo_name hidden dark:block">BlackBuzz</p>
+                  <p className="logo_name_light dark:hidden">BlackBuzz</p>
                 </a>
               </Link>
               <p className="dark:text-jacarta-300 mb-12">
@@ -75,7 +75,7 @@ const footer = () => {
 
           <div className="flex flex-col items-center justify-between space-y-2 py-8 sm:flex-row sm:space-y-0">
             <span className="dark:text-jacarta-400 text-sm">
-              <span>© {new Date().getFullYear()} - Socialverse</span>
+              <span>© {new Date().getFullYear()} - BlackBuzz</span>
             </span>
 
             <ul className="dark:text-jacarta-400 flex flex-wrap space-x-4 text-sm">

@@ -232,7 +232,7 @@ const Create_post = () => {
                     htmlFor="terms"
                     className="font-pop dark:text-jacarta-200 text-sm text-none"
                   >
-                    By checking this box, I agree to {"Socialverse's"}{" "}
+                    By checking this box, I agree to {"BlackBuzz's"}{" "}
                     <a href="#" className="text-accent">
                       Terms of Service
                     </a>

@@ -477,7 +477,7 @@ const Edit_user = () => {
                           id="profile-username"
                           className="dark:bg-jacarta-700 border-jacarta-100 hover:ring-accent/10 focus:ring-accent dark:border-jacarta-600 dark:placeholder:text-jacarta-300 w-full rounded-lg py-3 hover:ring-2 dark:text-white pl-10"
                           placeholder={
-                            data?.nameUserLink ? data?.nameUserLink : "@socialverse"
+                            data?.nameUserLink ? data?.nameUserLink : "@BlackBuzz"
                           }
                           data-ls-module="charCounter"
                           maxLength={30}

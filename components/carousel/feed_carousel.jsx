@@ -101,7 +101,7 @@ const Feed_carousel = () => {
                                         </a>
                                         <span className="text-accent inline-flex flex-wrap items-center space-x-1">
                                           <a href="#" className="text_user">
-                                            Socialverse
+                                            BlackBuzz
                                           </a>
                                         </span>
                                         <div className="col flex items-center flex-w-col items-center">
@@ -252,7 +252,7 @@ const Feed_carousel = () => {
                                         </a>
                                         <span className="text-accent inline-flex flex-wrap items-center space-x-1">
                                           <a href="#" className="text_user">
-                                            Socialverse
+                                            BlackBuzz
                                           </a>
                                         </span>
                                         <div className="col flex items-center flex-w-col items-center">

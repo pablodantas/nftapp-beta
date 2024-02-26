@@ -14,7 +14,7 @@ function Share({ keyModal, showShare, postId, post }) {
   const sharePost = () => {
     navigator.share({
       title: "Check out this post!",
-      text: "I found this post on Socialverse and wanted to share it with you.",
+      text: "I found this post on BlackBuzz and wanted to share it with you.",
       url: postLink,
     });
   };
@@ -27,7 +27,7 @@ function Share({ keyModal, showShare, postId, post }) {
   };
 
   const sharePostWhatsapp = () => {
-    const message = `I found this post on Socialverse and wanted to share it with you.\n\n ${postLink}`;
+    const message = `I found this post on BlackBuzz and wanted to share it with you.\n\n ${postLink}`;
     const whatsappShareLink = `whatsapp://send?text=${encodeURIComponent(
       message
     )}`;
@@ -36,7 +36,7 @@ function Share({ keyModal, showShare, postId, post }) {
 
   const sharePostTwitter = () => {
     const message =
-      "I found this post on Socialverse and wanted to share it with you.\n\n";
+      "I found this post on BlackBuzz and wanted to share it with you.\n\n";
     const twitterShareLink = `https://twitter.com/share?url=${encodeURIComponent(
       postLink
     )}&text=${encodeURIComponent(message)}`;

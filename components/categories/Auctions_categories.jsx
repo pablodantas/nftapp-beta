@@ -281,7 +281,7 @@ const Auctions_categories = () => {
                   <h2 className="font-display text-jacarta-700 dark:hover:text-accent hover:text-accent mb-4 text-xl dark:text-white">
                     <Link href={``}>
                       <a href="/single_post/post_1">
-                        #1 Investidor Socialverse
+                        #1 Investidor BlackBuzz
                       </a>
                     </Link>
                   </h2>

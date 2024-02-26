@@ -45,7 +45,7 @@ const Item_details = () => {
                     className="rounded-2lg h-12 w-12"
                     loading="lazy"
                     src="https://ipfs.moralis.io:2053/ipfs/QmUkjfws5aESgu1XUNenpUU159zQvxytSQ5R1wJmGKwwUv/ipfs.jpg"
-                    alt="Socialverse"
+                    alt="BlackBuzz"
                   />
                   <div
                     className="dark:border-jacarta-600 bg-purple absolute -right-3 top-[60%] flex h-6 w-6 items-center justify-center rounded-full border-2 border-white"
@@ -60,7 +60,7 @@ const Item_details = () => {
                   Owned by
                 </span>
                 <a className="text-accent block" href="#">
-                  <span className="text-sm font-bold">Socialverse</span>
+                  <span className="text-sm font-bold">BlackBuzz</span>
                 </a>
               </div>
             </div>

@@ -141,7 +141,7 @@ const Login = () => {
                               <span>Wait! logging in...</span>
                             </>
                           ) : (
-                            <>Login in Socialverse</>
+                            <>Login in BlackBuzz</>
                           )}
                         </span>
                       )}
