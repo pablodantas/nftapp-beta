@@ -19,6 +19,7 @@ import Share from "./share_modal";
 
 const Following = () => {
   const [copied, setCopied] = useState(false);
+  
 
   useEffect(() => {
     setTimeout(() => {
@@ -114,6 +115,12 @@ const Following = () => {
       setItem(data);
     }
   }, [data]);
+  
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const toggleExpand = () => {
+    setIsExpanded(!isExpanded);
+  };
 
   const fetchData = () => {
     setPageSize(pageSize + 1);
@@ -377,14 +384,60 @@ const Following = () => {
                     }
                   })}
                 </p>
-              <div className="col flex my-2 flex-col w-550">
-                <p
-                  id="textpost"
-                  className={"text-dark dark:text-white m-0 flex"}
-                >
-                  <DescriptionNFT tokenURI={item.tokenURI} />
-                </p>
-              </div>
+                <div
+                    className="col flex my-2 flex-col w-550 items-end"
+                    style={{
+                      maxHeight: isExpanded ? "none" : "3em",
+                      alignItems: "flex-start",
+                      flexDirection: "row",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      display: "flex",
+                      WebkitBoxOrient: "vertical",
+                      width: "100%",
+                      textAlign: isExpanded ? "start" : "justify",
+                      whiteSpace: isExpanded ? "break-spaces" : "inherit",
+                    }}
+                  >
+                    <p
+                      id="textpost"
+                      className={"text-dark dark:text-white m-0 flex"}
+                      style={{
+                        display: isExpanded ? "inline-block" : "inline-block",
+                      }}
+                    >
+                      {item?.description}
+                      {isExpanded && (
+                        <button
+                          style={{
+                            maxWidth: "80px",
+                            minWidth: "80px",
+                            marginTop: "auto",
+                            marginLeft: "5px",
+                          }}
+                          onClick={toggleExpand}
+                          className="text-accent mt-1 text-start"
+                        >
+                          ...See less
+                        </button>
+                      )}
+                    </p>
+                    {!isExpanded && item?.description.length > 150 && (
+                      <button
+                        style={{
+                          maxWidth: "80px",
+                          minWidth: "80px",
+                          marginTop: "auto",
+                          whiteSpace: "nowrap",
+                          marginLeft: "5px",
+                        }}
+                        onClick={toggleExpand}
+                        className="text-accent mt-1  text-start"
+                      >
+                        ...See more
+                      </button>
+                    )}
+                  </div>
               <div className="col">
                 <div className="row flex flex-col">
                   <div className="col">
@@ -396,7 +449,7 @@ const Following = () => {
                           className="w-full h-full absolute"
                           onClick={() => HandleImage(index)}
                         ></button>
-                        <ImageNFT tokenURI={item.tokenURI} />
+                        <ImageNFT tokenURI={item.image} />
                         {showElementIndex === index ? (
                           <Coments
                             showElement={showElement}
