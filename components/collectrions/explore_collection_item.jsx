@@ -687,7 +687,7 @@ const Explore_collection_item = ({ filter, collection }) => {
                               />
                             )}
                             <p className="font-medium mr-2 text-green">
-                              {item?.rede === "Select" ? "XTAP" : item?.rede}
+                              {item?.rede === "Select" ? "Buzz Coin" : item?.rede}
                             </p>
                           </div>
                           <div className="col ml-2 font-medium text-dark dark:text-white">
@@ -829,7 +829,7 @@ const Explore_collection_item = ({ filter, collection }) => {
                                   alt=""
                                 />
                                 <p className="font-medium mr-2 text-green">
-                                  XTAP
+                                  Buzz Coin
                                 </p>
                               </div>
                               <div className="col ml-2 font-medium text-dark dark:text-white">

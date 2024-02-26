@@ -606,7 +606,7 @@ const CardAnuncio = ({ keyPryme }) => {
                           />
                         )}
                         <p className="font-medium mr-2 text-green">
-                          {item[0]?.rede === "Select" ? "XTAP" : item[0]?.rede}
+                          {item[0]?.rede === "Select" ? "Buzz Coin" : item[0]?.rede}
                         </p>
                       </div>
                       <div className="col ml-2 font-medium text-dark dark:text-white">
