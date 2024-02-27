@@ -111,14 +111,14 @@ export const hero_5_data = [
     img: "/images/FEaFK4OWUAAlgiV.jpeg",
     title: "Etherium NFT Launching Lab",
     authorImage: "/images/FEaFK4OWUAAlgiV.jpeg",
-    authorName: "Bruno DEV",
+    authorName: "Ronald Franklin",
     id: "0Etherium NFT Launching Lab",
   },
   {
     img: "/images/hand-drawn-nft-style-ape-illustration_23-2149611030.webp",
     title: "Oceania \\\\ OVERSEER 017",
     authorImage: "/images/hand-drawn-nft-style-ape-illustration_23-2149611030.webp",
-    authorName: "Pablo",
+    authorName: "20tv",
     id: "1Oceania \\\\ OVERSEER 017",
 
     subItem: [
