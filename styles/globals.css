@@ -7011,12 +7011,12 @@ border: 4px solid #6d6fb8;
 		margin-left: 0;
 	}
 	.imgpost{
-		min-width: 520px !important;
-    	max-width: 520px !important;
+		min-width: 201px !important;
+    	max-width: 201px !important;
 	}
 	.imgpost2{
-		min-width: 520px !important;
-    	max-width: 520px !important;
+		min-width: 201px !important;
+    	max-width: 201px !important;
 	}
 	.w-comments > div{
 		width: 56%;
@@ -7148,10 +7148,10 @@ border: 4px solid #6d6fb8;
 }
 @media (max-width: 550px){
 	.imgpost{
-		min-height: 270px;
+		min-height: 201px;
 	}
 	.imgpost2{
-		min-height: 270px;
+		min-height: 201px;
 	}
 }
 @media (max-width: 650px) {
