@@ -2,7 +2,7 @@ const collection_data = [
 	{
 		id: 1,
 		title: 'NFT Funny Cat',
-		image: '/images/NFT_1.webp',
+		image: '/images/13.jpg',
 		icon: true,
 		amount: '7,080.95',
 		postTime: '2022-07-20',
@@ -11,7 +11,7 @@ const collection_data = [
 	{
 		id: 2,
 		title: 'Cryptopank',
-		image: '/images/NFT_2.webp',
+		image: '/images/14.jpg',
 		icon: true,
 		amount: '6,548,133',
 		postTime: '2022-07-10',
@@ -20,7 +20,7 @@ const collection_data = [
 	{
 		id: 3,
 		title: 'Prince Ape Planet',
-		image: '/images/NFT_3.jpg',
+		image: '/images/15.jpg',
 		icon: false,
 		amount: '4,823,927',
 		postTime: '2022-07-08',
@@ -29,7 +29,7 @@ const collection_data = [
 	{
 		id: 4,
 		title: 'Hey Mrsmeseks',
-		image: '/images/NFT_4.png',
+		image: '/images/16.jpg',
 		icon: true,
 		amount: '3,186',
 		postTime: '2022-07-01',
@@ -38,7 +38,7 @@ const collection_data = [
 	{
 		id: 5,
 		title: 'Bored Bunny',
-		image: '/images/NFT_5.jpg',
+		image: '/images/17.jpg',
 		icon: false,
 		amount: '3,027',
 		postTime: '2022-07-05',
@@ -47,7 +47,7 @@ const collection_data = [
 	{
 		id: 6,
 		title: 'Wow Frens',
-		image: '/images/NFT_6.jpg',
+		image: '/images/18.jpg',
 		icon: false,
 		amount: '2,586',
 		postTime: '2022-07-08',
@@ -56,7 +56,7 @@ const collection_data = [
 	{
 		id: 7,
 		title: 'Origin Morish',
-		image: '/images/NFT_7.webp',
+		image: '/images/19.jpg',
 		icon: true,
 		amount: '2,347.85',
 		postTime: '2022-07-20',
@@ -65,7 +65,7 @@ const collection_data = [
 	{
 		id: 8,
 		title: 'Superdo',
-		image: '/images/NFT_8.jpg',
+		image: '/images/20.jpg',
 		icon: true,
 		amount: '2,115.71',
 		postTime: '2022-07-10',
@@ -74,7 +74,7 @@ const collection_data = [
 	{
 		id: 9,
 		title: 'NFT stars',
-		image: '/images/NFTr_9.png',
+		image: '/images/21.jpg',
 		icon: false,
 		amount: '2,027',
 		postTime: '2022-07-12',
@@ -83,7 +83,7 @@ const collection_data = [
 	{
 		id: 10,
 		title: 'Asumitsu',
-		image: '/images/NFT_1.webp',
+		image: '/images/22.jpg',
 		icon: true,
 		amount: '1,989.70',
 		postTime: '2022-07-15',
@@ -92,7 +92,7 @@ const collection_data = [
 	{
 		id: 11,
 		title: 'Pank Skull',
-		image: '/images/NFT_2.webp',
+		image: '/images/6.jpg',
 		icon: false,
 		amount: '1,726.70',
 		postTime: '2022-07-16',
@@ -101,7 +101,7 @@ const collection_data = [
 	{
 		id: 12,
 		title: 'Lazy Panda',
-		image: '/images/NFT_3.jpg',
+		image: '/images/5.jpg',
 		icon: false,
 		amount: '1,589.03',
 		postTime: '2022-07-14',
@@ -110,7 +110,7 @@ const collection_data = [
 	{
 		id: 13,
 		title: 'Arcahorizons',
-		image: '/images/NFT_6.jpg',
+		image: '/images/4.jpg',
 		icon: true,
 		amount: '1,157',
 		postTime: '2022-07-20',
@@ -119,7 +119,7 @@ const collection_data = [
 	{
 		id: 14,
 		title: 'Sussygirl',
-		image: '/images/NFT_5.jpg',
+		image: '/images/3.jpg',
 		icon: false,
 		amount: '1,030',
 		postTime: '2022-06-20',
@@ -128,7 +128,7 @@ const collection_data = [
 	{
 		id: 15,
 		title: 'Smilebin',
-		image: '/images/NFT_4.png',
+		image: '/images/2.jpg',
 		icon: true,
 		amount: '999.51',
 		postTime: '2022-07-20',
@@ -137,7 +137,7 @@ const collection_data = [
 	{
 		id: 16,
 		title: 'Pankysmoke',
-		image: '/images/NFT_9.png',
+		image: '/images/1.jpg',
 		icon: false,
 		amount: '875.65',
 		postTime: '2022-07-20',
@@ -149,7 +149,7 @@ const collection_item_data = [
 	{
 		id: 'avatar_1',
 		title: 'NFT Funny Cat',
-		image: '/images/NFT_1.webp',
+		image: '/images/3.jpg',
 		icon: true,
 		creator: '051_Hart',
 		text: 'Unique, fully 3D and built to unite the design multiverse. Designed and styled by Digimental.',
@@ -766,7 +766,7 @@ const collectionCategoryData = [
 			{
 				id: 1,
 				title: 'NFT Funny Cat',
-				image: '/images/NFT_1.webp',
+				image: '/images/1.jpg',
 				icon: true,
 				amount: '7,080.95',
 				postTime: '2022-07-20',
@@ -774,7 +774,7 @@ const collectionCategoryData = [
 			{
 				id: 2,
 				title: 'Cryptopank',
-				image: '/images/NFT_1.webp',
+				image: '/images/1.jpg',
 				icon: true,
 				amount: '6,548,133',
 				postTime: '2022-07-10',
