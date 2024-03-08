@@ -73,6 +73,8 @@ const Login = () => {
             query.set("postOwner", user.attributes.ethAddress.toLowerCase());
             query.set("carteira", 1000);
             query.set("nameUserLink", "");
+            query.set("avatarUser", "");
+            query.set("userName", "");
             await query.save();
             Router.push("profile");
           } else {
