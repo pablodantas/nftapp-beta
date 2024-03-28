@@ -31,7 +31,13 @@ const Item = () => {
         const Marketplace = Moralis.Object.extend("Marketplace");
         const query = new Moralis.Query(Marketplace);
         query.equalTo("token_address", contract);
-        query.equalTo("token_id", item);
+
+        const tokenId = parseInt(item, 10);
+        if (isNaN(tokenId)) {
+          console.error("'quantitys' não é um número válido.");
+          return;
+        }
+        query.equalTo("token_id", tokenId);
         const result = await query.first();
         if (!result) {
           throw new Error("Nenhum item encontrado");

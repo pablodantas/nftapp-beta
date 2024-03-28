@@ -21,7 +21,7 @@ function ModalNft({ nft, keyModal, showElementNFT, itemActive }) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-  
+
   const { Moralis, user } = useMoralis();
 
   const [isTermsAccepted, setIsTermsAccepted] = useState(false);
@@ -43,7 +43,7 @@ function ModalNft({ nft, keyModal, showElementNFT, itemActive }) {
     return res;
   }
 
-  const { data: quantity } = useQuery(`NftsQuantity`, nftQuantity, {
+  const { data: quantity } = useQuery(`NftsQuantity${quantity}`, nftQuantity, {
     staleTime: 1000 * 1,
     //cacheTime: 111120000,
   });
@@ -68,58 +68,72 @@ function ModalNft({ nft, keyModal, showElementNFT, itemActive }) {
       return;
     }
 
-    if (nft && user.attributes.ethAddress) {
-      try {
-        const abi = [
-          {
-            path: "metadata.json",
-            content: {
-              name: nameNft,
-              description: descriptionNft,
-              image: nft,
-            },
-          },
-        ];
-
-        const metadataurl = await MoralisIPFSMetadata(abi);
-
-        const NFTs = Moralis.Object.extend("NFTs");
-        const newNFTs = new NFTs();
-        newNFTs.set("minter_address", user.attributes.ethAddress);
-        newNFTs.set("collection", "BlackBuzz");
-        newNFTs.set("symbol", "Tap");
-        newNFTs.set("token_address", "0xf17e7382f937cd1204a674b87e2aa358cd027bf2");
-        newNFTs.set("token_id", quantitys);
-        newNFTs.set("owner", user.attributes.ethAddress);
-        if (metadataurl) {
-          newNFTs.set("token_uri", metadataurl);
-        }
-        newNFTs.set("buy", false);
-        await newNFTs.save();
-        setIsLoading(false);
-        setShowCrop(true);
-        setX();
-
-        if (router) {
-          const currentPath = router.pathname;
-          const newRoute = currentPath === "/myprofile" ? currentPath : "/myprofile";
-        
-          setTimeout(() => {
-            router.replace({
-              pathname: newRoute,
-              query: { ...router.query, defaultIndex: 3 },
-            }, undefined, { shallow: true });
-          }, 1500);
-        }
-        
-        
-
-      } catch (err) {
-        console.error(err);
-        alert("Verifique faça login novamente!");
-        setX();
-      }
+    // É uma boa prática verificar explicitamente a existência de variáveis antes de prosseguir
+    if (!nft || !user?.attributes?.ethAddress) {
+      console.error("NFT ou endereço Ethereum do usuário não fornecido.");
+      return;
     }
+
+    try {
+      const abi = [
+        {
+          path: "metadata.json",
+          content: {
+            name: nameNft,
+            description: descriptionNft,
+            image: nft,
+          },
+        },
+      ];
+
+      const metadataUrl = await MoralisIPFSMetadata(abi);
+
+      if (!metadataUrl) {
+        console.error("Falha ao obter a URL de metadados.");
+        return;
+      }
+
+      // Converter 'quantitys' para Int32 e verificar validade
+      const tokenId = parseInt(quantitys, 10);
+      if (isNaN(tokenId)) {
+        console.error("'quantitys' não é um número válido.");
+        return;
+      }
+
+      const NFTs = Moralis.Object.extend("NFTs");
+      const newNFT = new NFTs();
+
+      newNFT.set("minter_address", user.attributes.ethAddress);
+      newNFT.set("collection", "BlackBuzz");
+      newNFT.set("symbol", "Tap");
+      newNFT.set("token_address", "0xf17e7382f937cd1204a674b87e2aa358cd027bf2");
+      newNFT.set("token_id", tokenId); // Certifique-se de que 'quantitys' esteja definido e seja válido
+      newNFT.set("owner", user.attributes.ethAddress);
+      newNFT.set("token_uri", metadataUrl);
+      newNFT.set("buy", false);
+
+      await newNFT.save();
+
+      setIsLoading(false);
+      setShowCrop(true);
+      setX(); // Certifique-se de que 'setX' esteja definido e seja uma função válida
+
+      // Redirecionar o usuário, se aplicável
+      if (router) {
+        const newPath = "/myprofile";
+        setTimeout(() => {
+          router.replace({
+            pathname: newPath,
+            query: { ...router.query, defaultIndex: 3 },
+          }, undefined, { shallow: true });
+        }, 1500);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Ocorreu um erro. Por favor, faça login novamente!");
+      setX(); // Certifique-se novamente de que 'setX' esteja definido corretamente
+    }
+
   };
 
   const [xiX, setX] = useState();
@@ -139,7 +153,7 @@ function ModalNft({ nft, keyModal, showElementNFT, itemActive }) {
         <div>
           <div className={"modal fade show block"} key={keyModal}>
             <div className="modal-dialog max-w-2xl">
-              <div className="modal-content dark:bg-jacarta-700"  ref={ref}>
+              <div className="modal-content dark:bg-jacarta-700" ref={ref}>
                 <>
                   <div className="modal-header p-over_10">
                     <h5
@@ -225,11 +239,10 @@ function ModalNft({ nft, keyModal, showElementNFT, itemActive }) {
                             ? "Please agree to the terms and conditions"
                             : null
                         }
-                        className={`dark:hover:bg-jacarta-600 hover:bg-jacarta-50 border-jacarta-100 group flex items-center justify-center border bg-white transition-colors hover:border-transparent focus:border-transparent dark:border-transparent dark:bg-white/[.15] rounded-button py-3 px-8 text-center font-semibold text-white transition-all ${
-                          !isTermsAccepted
-                            ? "disabled:opacity-50 cursor-not-allowed"
-                            : ""
-                        }`}
+                        className={`dark:hover:bg-jacarta-600 hover:bg-jacarta-50 border-jacarta-100 group flex items-center justify-center border bg-white transition-colors hover:border-transparent focus:border-transparent dark:border-transparent dark:bg-white/[.15] rounded-button py-3 px-8 text-center font-semibold text-white transition-all ${!isTermsAccepted
+                          ? "disabled:opacity-50 cursor-not-allowed"
+                          : ""
+                          }`}
                         disabled={!isTermsAccepted}
                       >
                         {isLoading ? (
