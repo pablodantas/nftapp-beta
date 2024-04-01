@@ -5,7 +5,6 @@ import Image from "next/image";
 import "react-tabs/style/react-tabs.css";
 import My_collection_item_Upload from "../collectrions_upload/myprofile_collection_item";
 import My_collection_itemPost from "../collectrions/myprofile/myprofile_collection_item";
-import My_collection_item_nft from "../collectrions/myprofile/myprofile_collection_nft";
 import My_collection_item_nftBlockChain from "../collectrions/myprofile/myprofile_collection_item_nftBlockChain";
 import Explore_collection_item_buy from "../collectrions/myprofile/myprofile_collection_item_buy";
 import My_collection_item_anuncio from "../collectrions/myprofile/myprofile_collection_anuncio";
@@ -65,26 +64,21 @@ const User_items = () => {
     },
     {
       id: 3,
-      text: "NFT $Buzz Coin",
-      icon: "created",
-    },
-    {
-      id: 4,
       text: "NFTs WALLET",
       icon: "created",
     },
     {
-      id: 5,
+      id: 4,
       text: "SALE",
       icon: "on-sale",
     },
     {
-      id: 6,
+      id: 5,
       text: "ADVERTS",
       icon: "created",
     },
     {
-      id: 7,
+      id: 6,
       text: "ACTIVITY",
       icon: "activity",
     },
@@ -301,11 +295,10 @@ const User_items = () => {
                   <div className="">
                     {id === 1 && <My_collection_item_Upload />}
                     {id === 2 && <My_collection_itemPost />}
-                    {id === 3 && <My_collection_item_nft />}
-                    {id === 4 && <My_collection_item_nftBlockChain />}
-                    {id === 5 && <Explore_collection_item_buy />}
-                    {id === 6 && <My_collection_item_anuncio />}
-                    {id === 7 && <Activity_item />}
+                    {id === 3 && <My_collection_item_nftBlockChain />}
+                    {id === 4 && <Explore_collection_item_buy />}
+                    {id === 5 && <My_collection_item_anuncio />}
+                    {id === 6 && <Activity_item />}
                   </div>
                 </TabPanel>
               );

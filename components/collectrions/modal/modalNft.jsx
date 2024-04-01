@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useMoralis } from "react-moralis";
 import MetaNft from "./image";
-// import Web3 from "web3";
-// const web3 = new Web3(Web3.givenProvider);
+import Web3 from "web3";
+const web3 = new Web3(Web3.givenProvider);
 import NFT_true from "../../modal/nft_sucefuly";
 import { useRouter } from 'next/router';
 
@@ -62,13 +62,14 @@ function ModalNft({ nft, keyModal, showElementNFT }) {
 
   const onSubmit = async (nft) => {
     const image = await MetaNft(nft.token_uri);
+    console.log(nft);
     
     if (image && nft && value > 0) {
       try {
         const Marketplace = Moralis.Object.extend("Marketplace");
         const query = new Moralis.Query(Marketplace);
         query.equalTo("token_address", nft.token_address);
-        query.equalTo("token_id", nft.token_id);
+        query.equalTo("token_id", parseInt(nft.token_id, 10));
         const myDetails = await query.first();
         if (myDetails) {
           myDetails.set("owner", nft.owner_of);
@@ -86,7 +87,7 @@ function ModalNft({ nft, keyModal, showElementNFT }) {
           if (nameNft) newMarketplace.set("name", nameNft);
           if (descriptionNft) newMarketplace.set("description", descriptionNft);
           newMarketplace.set("token_address", nft.token_address);
-          newMarketplace.set("token_id", nft.token_id);
+          newMarketplace.set("token_id", parseInt(nft.token_id, 10));
           newMarketplace.set("owner", nft.owner_of);
           newMarketplace.set("valor", parseInt(value, 10))
           if (image) {

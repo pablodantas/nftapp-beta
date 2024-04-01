@@ -8,7 +8,8 @@ import NftAnuncio from "../../components/item_nft/anuncio";
 
 const Item = () => {
   const router = useRouter();
-  const item = router.query.item;
+
+  const item = parseInt(router.query.item, 10);
   const contract = router.query.contract;
   
   const { Moralis } = useMoralis();
@@ -31,13 +32,7 @@ const Item = () => {
         const Marketplace = Moralis.Object.extend("Marketplace");
         const query = new Moralis.Query(Marketplace);
         query.equalTo("token_address", contract);
-
-        const tokenId = parseInt(item, 10);
-        if (isNaN(tokenId)) {
-          console.error("'quantitys' não é um número válido.");
-          return;
-        }
-        query.equalTo("token_id", tokenId);
+        query.equalTo("token_id", item);
         const result = await query.first();
         if (!result) {
           throw new Error("Nenhum item encontrado");

@@ -124,9 +124,6 @@ const NftItem = ({ nft, tokenId, contract, history }) => {
       const newWalletBalan = parseInt(Perd) - parseInt(nft.valor); // converte o valor para Number
       perdObj.set("carteira", newWalletBalan);
 
-      await ganhadorObj.save();
-      await perdObj.save();
-
       if (!contract || !tokenId || !nft.valor || !walletAddress || !nft.owner) {
         console.error("Erro: informações incompletas");
         return;
@@ -135,27 +132,11 @@ const NftItem = ({ nft, tokenId, contract, history }) => {
       const HistoryNft = Moralis.Object.extend("HistoryNft");
       const queryHistory = new HistoryNft();
       queryHistory.set("token_address", contract);
-      queryHistory.set("token_id", tokenId);
+      queryHistory.set("token_id", parseInt(nft.token_id, 10));
       queryHistory.set("event", 'Sale');
       queryHistory.set("from", nft.owner);
       queryHistory.set("valor", nft.valor);
 
-      const NFTs = Moralis.Object.extend("NFTs");
-      const queryNft = new Moralis.Query(NFTs);
-      queryNft.equalTo("token_address", contract);
-      queryNft.equalTo("token_id", tokenId);
-      const myDetails = await queryNft.first();
-      if (!myDetails) {
-        console.error("Erro: NFT não encontrado");
-        return;
-      }
-      if (!walletAddress) {
-        console.error("Erro: endereço da carteira não informado");
-        return;
-      }
-      myDetails.set("owner", walletAddress);
-      myDetails.set("buy", false);
-      await myDetails.save();
       setBuyerrStatus("80%");
       const Marketplace = Moralis.Object.extend("Marketplace");
       const query = new Moralis.Query(Marketplace);
@@ -168,6 +149,8 @@ const NftItem = ({ nft, tokenId, contract, history }) => {
       } else {
         console.log("Não foi possível encontrar o item no mercado.");
       }
+      await ganhadorObj.save();
+      await perdObj.save();
       await queryHistory.save();
       setBuyerrStatus("100%");
     } catch (err) {

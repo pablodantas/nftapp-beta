@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-// import Web3 from "web3";
-// const web3 = new Web3(Web3.givenProvider);
-// import { contractABI, contractAddress } from "../../../contract";
+import Web3 from "web3";
+const web3 = new Web3(Web3.givenProvider);
+import { contractABI, contractAddress } from "../../../contract";
 import MoralisIPFSMetadata from "../../ipfsGenerete/moralisIPFSMetadata";
 import { useMoralis } from "react-moralis";
 import { useQuery } from "react-query";
@@ -85,34 +85,138 @@ function ModalNft({ nft, keyModal, showElementNFT, itemActive }) {
           },
         },
       ];
-
+      console.log("abi", abi);
       const metadataUrl = await MoralisIPFSMetadata(abi);
 
       if (!metadataUrl) {
-        console.error("Falha ao obter a URL de metadados.");
+        console.error("metadataUrl não fornecido.");
         return;
       }
 
-      // Converter 'quantitys' para Int32 e verificar validade
-      const tokenId = parseInt(quantitys, 10);
-      if (isNaN(tokenId)) {
-        console.error("'quantitys' não é um número válido.");
-        return;
+      console.log("metadata", metadataUrl);
+
+      if (metadataUrl && contractABI && contractAddress) {
+        try {
+          const contractAddress = "0x7EcfE44fD71F6f7474514DE80f503d692359B463";
+          const contract = new web3.eth.Contract([
+            {
+              "inputs": [
+                {
+                  "internalType": "address",
+                  "name": "marketPlaceAddress",
+                  "type": "address"
+                }
+              ],
+              "stateMutability": "nonpayable",
+              "type": "constructor"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "string",
+                  "name": "tokenURI",
+                  "type": "string"
+                }
+              ],
+              "name": "createToken",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "getNFTMarketAddress",
+              "outputs": [
+                {
+                  "internalType": "address",
+                  "name": "",
+                  "type": "address"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "name",
+              "outputs": [
+                {
+                  "internalType": "string",
+                  "name": "",
+                  "type": "string"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "symbol",
+              "outputs": [
+                {
+                  "internalType": "string",
+                  "name": "",
+                  "type": "string"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "supportsInterface",
+              "outputs": [
+                {
+                  "internalType": "bool",
+                  "name": "",
+                  "type": "bool"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "name": "tokenURIs",
+              "outputs": [
+                {
+                  "internalType": "string",
+                  "name": "",
+                  "type": "string"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            }
+          ], contractAddress);
+
+          // Certifique-se de que `metadataUrl` e `user.get("ethAddress")` estão corretamente definidos.
+          const response = await contract.methods.createToken(metadataUrl).send({ from: user.get("ethAddress") });
+
+          // Como o `tokenId` não é diretamente retornado, você pode precisar ajustar a forma de recuperá-lo.
+          // Isso pode incluir a escuta de eventos ou outras lógicas específicas ao seu contrato.
+          alert(`NFT successfully minted. Contract address - ${contractAddress}`);
+          const tokenId = response.events.Transfer.returnValues.tokenId;
+
+          alert(
+            `NFT successfully minted. Contract address - ${contractAddress} and Token ID - ${tokenId}`
+          );
+        } catch (error) {
+          console.error("An error occurred while minting the NFT:", error);
+        }
       }
-
-      const NFTs = Moralis.Object.extend("NFTs");
-      const newNFT = new NFTs();
-
-      newNFT.set("minter_address", user.attributes.ethAddress);
-      newNFT.set("collection", "BlackBuzz");
-      newNFT.set("symbol", "Tap");
-      newNFT.set("token_address", "0xf17e7382f937cd1204a674b87e2aa358cd027bf2");
-      newNFT.set("token_id", tokenId); // Certifique-se de que 'quantitys' esteja definido e seja válido
-      newNFT.set("owner", user.attributes.ethAddress);
-      newNFT.set("token_uri", metadataUrl);
-      newNFT.set("buy", false);
-
-      await newNFT.save();
 
       setIsLoading(false);
       setShowCrop(true);

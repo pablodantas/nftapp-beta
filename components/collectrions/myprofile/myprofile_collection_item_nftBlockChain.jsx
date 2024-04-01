@@ -53,13 +53,15 @@ const My_collection_item_nftBlockChain = () => {
   };
 
   const { data, isLoading } = useQuery(
-    `user${walletAddress}myColecction${"NftsLogs"}page${pageSize}`,
+    `user${walletAddress}myColecction${"NftsBlockchain"}page${pageSize}`,
     fetchItem,
     {
       staleTime: 1000 * 1,
       //cacheTime: 111120000,
     }
   );
+
+  console.log(data, "test")
 
   useEffect(() => {
     if (data) {
@@ -197,7 +199,7 @@ const My_collection_item_nftBlockChain = () => {
               You don't have NFTs
             </p>
           )}
-          {item.map((item, index) => (
+          {item?.map((item, index) => (
             <article
               key={index}
               className={`max-w-xs min-w-16 ${isLargeScreen ? " height_nft_card_hover" : ""
