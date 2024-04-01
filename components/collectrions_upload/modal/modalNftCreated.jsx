@@ -22,7 +22,7 @@ function ModalNft({ nft, keyModal, showElementNFT, itemActive }) {
     };
   }, []);
 
-  const { Moralis, user } = useMoralis();
+  const { Moralis, user, enableWeb3 } = useMoralis();
 
   const [isTermsAccepted, setIsTermsAccepted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -54,27 +54,29 @@ function ModalNft({ nft, keyModal, showElementNFT, itemActive }) {
     }
   }, [quantity]);
 
-  const onSubmit = async (nft) => {
-    setIsLoading(true);
-    if (!nameNft) {
-      setNameNftError("The Name field is mandatory.");
-      setIsLoading(false);
-      return;
-    }
+  // Assumindo que esta função está dentro de um componente React
+const onSubmit = async (nft) => {
+  setIsLoading(true);
+  if (!nameNft) {
+    setNameNftError("The Name field is mandatory.");
+    setIsLoading(false);
+    return;
+  }
 
-    if (!descriptionNft) {
-      setDescriptionNftError("The Description field is mandatory.");
-      setIsLoading(false);
-      return;
-    }
+  if (!descriptionNft) {
+    setDescriptionNftError("The Description field is mandatory.");
+    setIsLoading(false);
+    return;
+  }
 
-    // É uma boa prática verificar explicitamente a existência de variáveis antes de prosseguir
-    if (!nft || !user?.attributes?.ethAddress) {
-      console.error("NFT ou endereço Ethereum do usuário não fornecido.");
-      return;
-    }
+  // Verifica a existência de variáveis críticas
+  if (!nft || !user?.attributes?.ethAddress) {
+    console.error("NFT ou endereço Ethereum do usuário não fornecido.");
+    setIsLoading(false);
+    return;
+  }
 
-    try {
+  try {
       const abi = [
         {
           path: "metadata.json",
@@ -86,6 +88,7 @@ function ModalNft({ nft, keyModal, showElementNFT, itemActive }) {
         },
       ];
       console.log("abi", abi);
+      await enableWeb3();
       const metadataUrl = await MoralisIPFSMetadata(abi);
 
       if (!metadataUrl) {
@@ -93,136 +96,19 @@ function ModalNft({ nft, keyModal, showElementNFT, itemActive }) {
         return;
       }
 
-      console.log("metadata", metadataUrl);
-
-      if (metadataUrl && contractABI && contractAddress) {
-        try {
-          const contractAddress = "0x7EcfE44fD71F6f7474514DE80f503d692359B463";
-          const contract = new web3.eth.Contract([
-            {
-              "inputs": [
-                {
-                  "internalType": "address",
-                  "name": "marketPlaceAddress",
-                  "type": "address"
-                }
-              ],
-              "stateMutability": "nonpayable",
-              "type": "constructor"
-            },
-            {
-              "inputs": [
-                {
-                  "internalType": "string",
-                  "name": "tokenURI",
-                  "type": "string"
-                }
-              ],
-              "name": "createToken",
-              "outputs": [
-                {
-                  "internalType": "uint256",
-                  "name": "",
-                  "type": "uint256"
-                }
-              ],
-              "stateMutability": "nonpayable",
-              "type": "function"
-            },
-            {
-              "inputs": [],
-              "name": "getNFTMarketAddress",
-              "outputs": [
-                {
-                  "internalType": "address",
-                  "name": "",
-                  "type": "address"
-                }
-              ],
-              "stateMutability": "view",
-              "type": "function"
-            },
-            {
-              "inputs": [],
-              "name": "name",
-              "outputs": [
-                {
-                  "internalType": "string",
-                  "name": "",
-                  "type": "string"
-                }
-              ],
-              "stateMutability": "view",
-              "type": "function"
-            },
-            {
-              "inputs": [],
-              "name": "symbol",
-              "outputs": [
-                {
-                  "internalType": "string",
-                  "name": "",
-                  "type": "string"
-                }
-              ],
-              "stateMutability": "view",
-              "type": "function"
-            },
-            {
-              "inputs": [],
-              "name": "supportsInterface",
-              "outputs": [
-                {
-                  "internalType": "bool",
-                  "name": "",
-                  "type": "bool"
-                }
-              ],
-              "stateMutability": "view",
-              "type": "function"
-            },
-            {
-              "inputs": [
-                {
-                  "internalType": "uint256",
-                  "name": "",
-                  "type": "uint256"
-                }
-              ],
-              "name": "tokenURIs",
-              "outputs": [
-                {
-                  "internalType": "string",
-                  "name": "",
-                  "type": "string"
-                }
-              ],
-              "stateMutability": "view",
-              "type": "function"
-            }
-          ], contractAddress);
-
-          // Certifique-se de que `metadataUrl` e `user.get("ethAddress")` estão corretamente definidos.
-          const response = await contract.methods.createToken(metadataUrl).send({ from: user.get("ethAddress") });
-
-          // Como o `tokenId` não é diretamente retornado, você pode precisar ajustar a forma de recuperá-lo.
-          // Isso pode incluir a escuta de eventos ou outras lógicas específicas ao seu contrato.
-          alert(`NFT successfully minted. Contract address - ${contractAddress}`);
-          const tokenId = response.events.Transfer.returnValues.tokenId;
-
-          alert(
-            `NFT successfully minted. Contract address - ${contractAddress} and Token ID - ${tokenId}`
-          );
-        } catch (error) {
-          console.error("An error occurred while minting the NFT:", error);
-        }
-      }
-
-      setIsLoading(false);
-      setShowCrop(true);
-      setX(); // Certifique-se de que 'setX' esteja definido e seja uma função válida
-
-      // Redirecionar o usuário, se aplicável
+    // Inicializa Moralis e habilita Web3
+    const options = {
+      contractAddress: contractAddress,
+      functionName: "createToken",
+      abi: contractABI,
+      params: {
+        tokenURI: metadataUrl,
+      },
+    };
+    try {
+      const transaction = await Moralis.executeFunction(options);
+      await transaction.wait(); // Aguarda a transação ser confirmada
+      alert(`NFT successfully minted. Transaction hash - ${transaction.hash}`);
       if (router) {
         const newPath = "/myprofile";
         setTimeout(() => {
@@ -232,13 +118,17 @@ function ModalNft({ nft, keyModal, showElementNFT, itemActive }) {
           }, undefined, { shallow: true });
         }, 1500);
       }
-    } catch (err) {
-      console.error(err);
-      alert("Ocorreu um erro. Por favor, faça login novamente!");
-      setX(); // Certifique-se novamente de que 'setX' esteja definido corretamente
+      // Pode precisar ajustar a obtenção do tokenID baseado na resposta do seu contrato
+    } catch (error) {
+      console.error("An error occurred while minting the NFT:", error);
+      setIsLoading(false);
     }
+  } catch (error) {
+    console.error(error);
+    setIsLoading(false);
+  }
+};
 
-  };
 
   const [xiX, setX] = useState();
 
