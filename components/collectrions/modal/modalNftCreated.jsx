@@ -1,19 +1,40 @@
-import React, { useState, useEffect } from "react";
-// import Web3 from "web3";
-// const web3 = new Web3(Web3.givenProvider);
+import React, { useState, useEffect, useRef } from "react";
+import Web3 from "web3";
+const web3 = new Web3(Web3.givenProvider);
+import { contractABI, contractAddress } from "../../../contract";
 import MoralisIPFSMetadata from "../../ipfsGenerete/moralisIPFSMetadata";
 import { useMoralis } from "react-moralis";
 import { useQuery } from "react-query";
 import NFT_true from "../../modal/nft_sucefuly";
+import { useRouter } from "next/router";
 
-function ModalNft({ nft, keyModal, showElementNFT }) {
-  const { Moralis, user } = useMoralis();
-  const [showCrop, setShowCrop] = useState(false);
+function ModalNft({ nft, keyModal, showElementNFT, itemActive }) {
+  const ref = useRef();
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (ref.current && !ref.current.contains(event.target)) {
+        setX(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const { Moralis, user, enableWeb3 } = useMoralis();
 
   const [isTermsAccepted, setIsTermsAccepted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showCrop, setShowCrop] = useState(false);
   const [nameNft, setNameNft] = useState("");
   const [descriptionNft, setDescriptionNft] = useState("");
   const [quantitys, setQuantity] = useState(0);
+  const router = useRouter();
+  const [nameNftError, setNameNftError] = useState("");
+  const [descriptionNftError, setDescriptionNftError] = useState("");
+  const [DoubleError, setDoubleError] = useState("");
+
 
   async function nftQuantity() {
     const query = new Moralis.Query(`NFTs`);
@@ -22,7 +43,7 @@ function ModalNft({ nft, keyModal, showElementNFT }) {
     return res;
   }
 
-  const { data: quantity } = useQuery(`NftsQuantity`, nftQuantity, {
+  const { data: quantity } = useQuery(`NftsQuantity${quantity}`, nftQuantity, {
     staleTime: 1000 * 1,
     //cacheTime: 111120000,
   });
@@ -33,47 +54,80 @@ function ModalNft({ nft, keyModal, showElementNFT }) {
     }
   }, [quantity]);
 
-  const onSubmit = async (nft) => {
-    if (nft.image && user.attributes.ethAddress) {
-      try {
-        const abi = [
-          {
-            path: "metadata.json",
-            content: {
-              name: nameNft,
-              description: descriptionNft,
-              image: nft.image,
-            },
+  // Assumindo que esta função está dentro de um componente React
+const onSubmit = async (nft) => {
+  setIsLoading(true);
+  if (!nameNft) {
+    setNameNftError("The Name field is mandatory.");
+    setIsLoading(false);
+    return;
+  }
+
+  if (!descriptionNft) {
+    setDescriptionNftError("The Description field is mandatory.");
+    setIsLoading(false);
+    return;
+  }
+
+  // Verifica a existência de variáveis críticas
+  if (!nft || !user?.attributes?.ethAddress) {
+    console.error("NFT ou endereço Ethereum do usuário não fornecido.");
+    setIsLoading(false);
+    return;
+  }
+
+  try {
+      const abi = [
+        {
+          path: "metadata.json",
+          content: {
+            name: nameNft,
+            description: descriptionNft,
+            image: nft?.image,
           },
-        ];
+        },
+      ];
+      await enableWeb3();
+      const metadataUrl = await MoralisIPFSMetadata(abi);
 
-        const metadataurl = await MoralisIPFSMetadata(abi);
-
-        console.log("metadataurl",metadataurl)
-
-        const NFTs = Moralis.Object.extend("NFTs");
-        const newNFTs = new NFTs();
-        newNFTs.set("minter_address", user.attributes.ethAddress);
-        newNFTs.set("collection", "BlackBuzz");
-        newNFTs.set("symbol", 'Tap');
-        newNFTs.set("token_address", '0xf17e7382f937cd1204a674b87e2aa358cd027bf2');
-        newNFTs.set("token_id", quantitys);
-        newNFTs.set("owner", user.attributes.ethAddress);
-        newNFTs.set("buy", false);
-        if (metadataurl) {
-          newNFTs.set("token_uri", metadataurl);
-        }
-        await newNFTs.save();
-
-        setShowCrop(true);
-        setX();
-      } catch (err) {
-        console.error(err);
-        alert("Verifique faça login novamente!");
-        setX();
+      if (!metadataUrl) {
+        console.error("metadataUrl não fornecido.");
+        return;
       }
+
+    // Inicializa Moralis e habilita Web3
+    const options = {
+      contractAddress: contractAddress,
+      functionName: "createToken",
+      abi: contractABI,
+      params: {
+        tokenURI: metadataUrl,
+      },
+    };
+    try {
+      const transaction = await Moralis.executeFunction(options);
+      await transaction.wait(); // Aguarda a transação ser confirmada
+      alert(`NFT successfully minted. Transaction hash - ${transaction.hash}`);
+      if (router) {
+        const newPath = "/myprofile";
+        setTimeout(() => {
+          router.replace({
+            pathname: newPath,
+            query: { ...router.query, defaultIndex: 3 },
+          }, undefined, { shallow: true });
+        }, 1500);
+      }
+      // Pode precisar ajustar a obtenção do tokenID baseado na resposta do seu contrato
+    } catch (error) {
+      console.error("An error occurred while minting the NFT:", error);
+      setIsLoading(false);
     }
-  };
+  } catch (error) {
+    console.error(error);
+    setIsLoading(false);
+  }
+};
+
 
   const [xiX, setX] = useState();
 
@@ -87,36 +141,20 @@ function ModalNft({ nft, keyModal, showElementNFT }) {
 
   return (
     <>
-    {showCrop && <NFT_true />}
+      {showCrop && <NFT_true />}
       {xiX ? (
         <div>
           <div className={"modal fade show block"} key={keyModal}>
             <div className="modal-dialog max-w-2xl">
-              <div className="modal-content dark:bg-jacarta-700">
+              <div className="modal-content dark:bg-jacarta-700" ref={ref}>
                 <>
                   <div className="modal-header p-over_10">
                     <h5
                       className="ml_over_20 font-pop modal-title text-space text-none"
                       id="placeBidLabel"
                     >
-                      Put on sale{" "}
+                      Create NFT{" "}
                     </h5>
-                    <button
-                      type="button"
-                      className="btn-close"
-                      onClick={() => setX()}
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        width="24"
-                        height="24"
-                        className="fill-jacarta-700 h-6 w-6 dark:fill-white"
-                      >
-                        <path fill="none" d="M0 0h24v24H0z"></path>
-                        <path d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z"></path>
-                      </svg>
-                    </button>
                   </div>
                   {/* <!-- Body --> */}
                   <div className="modal-body p-over_20">
@@ -136,6 +174,7 @@ function ModalNft({ nft, keyModal, showElementNFT }) {
                         value={nameNft}
                         onChange={(e) => setNameNft(e.target.value)}
                       />
+                      <p className="text-red">{nameNftError}</p>
                     </div>
                     <div className="mb-2">
                       <label
@@ -158,6 +197,7 @@ function ModalNft({ nft, keyModal, showElementNFT }) {
                         value={descriptionNft}
                         onChange={(e) => setDescriptionNft(e.target.value)}
                       ></textarea>
+                      <p className="text-red">{descriptionNftError}</p>
                     </div>
                     {/* <!-- Terms --> */}
                     <div className="mt-4 flex items-center space-x-2">
@@ -174,7 +214,7 @@ function ModalNft({ nft, keyModal, showElementNFT }) {
                         htmlFor="terms"
                         className="font-pop dark:text-jacarta-200 text-sm text-none"
                       >
-                        By checking this box, I agree to {"BlackBuzz's"}{" "}
+                        By checking this box, I agree to {"BlackBuzz"}{" "}
                         <a href="#" className="text-accent">
                           Terms of Service
                         </a>
@@ -193,12 +233,21 @@ function ModalNft({ nft, keyModal, showElementNFT }) {
                             : null
                         }
                         className={`dark:hover:bg-jacarta-600 hover:bg-jacarta-50 border-jacarta-100 group flex items-center justify-center border bg-white transition-colors hover:border-transparent focus:border-transparent dark:border-transparent dark:bg-white/[.15] rounded-button py-3 px-8 text-center font-semibold text-white transition-all ${!isTermsAccepted
-                            ? "disabled:opacity-50 cursor-not-allowed"
-                            : ""
+                          ? "disabled:opacity-50 cursor-not-allowed"
+                          : ""
                           }`}
                         disabled={!isTermsAccepted}
                       >
-                        Create
+                        {isLoading ? (
+                          <>
+                            <span className="mr-2">Create</span>
+                            <div className="loader-container">
+                              <div className="loader"></div>
+                            </div>
+                          </>
+                        ) : (
+                          "Create"
+                        )}
                       </button>
                     </div>
                   </div>

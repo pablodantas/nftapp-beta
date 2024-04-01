@@ -4,7 +4,7 @@ import { useMoralis } from "react-moralis";
 import ProfileExploreName from "../profileUser/ProfileExploreName";
 import { useQuery } from "react-query";
 import ImagePost from "../metadata/nftImagePost";
-import ModalNft from "../modal/modalNftCreatedPost";
+import ModalNft from "../modal/modalNftCreated";
 import InfiniteScroll from "react-infinite-scroll-component";
 import TimeAgo from "react-timeago";
 import ModalPost from "../../collectrions_upload/modal/modalPost";

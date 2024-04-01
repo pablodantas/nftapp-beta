@@ -87,7 +87,6 @@ const onSubmit = async (nft) => {
           },
         },
       ];
-      console.log("abi", abi);
       await enableWeb3();
       const metadataUrl = await MoralisIPFSMetadata(abi);
 
@@ -215,7 +214,7 @@ const onSubmit = async (nft) => {
                         htmlFor="terms"
                         className="font-pop dark:text-jacarta-200 text-sm text-none"
                       >
-                        By checking this box, I agree to {"Socialverse's"}{" "}
+                        By checking this box, I agree to {"BlackBuzz"}{" "}
                         <a href="#" className="text-accent">
                           Terms of Service
                         </a>

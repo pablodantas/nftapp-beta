@@ -1,70 +1,16 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect,  useRef } from "react";
 import { useMoralis } from "react-moralis";
-import Metapost from "./image";
-import { useRouter } from "next/router";
 import Post_true from "../../modal/post_sucefuly";
+import { useRouter } from "next/router";
 
-function ModalPost({ post, keyModal, showElementpost }) {
-  
-  const ref = useRef();
-  const router = useRouter();
-
+function ModalPost({ post, keyModal, showElementPOST, ShareOnTapClose, postIdRepost, }) {
   const { Moralis, user } = useMoralis();
-  const [showCrop, setShowCrop] = useState(false);
-  const [namepost, setNamepost] = useState("");
-  const [descriptionpost, setDescriptionpost] = useState("");
-
-  const [xiX, setX] = useState();
-
-  useEffect(() => {
-    xMan()
-  }, [showElementpost]);
-
-  function xMan() {
-    setX(!xiX);
-  }
-
-  const onSubmit = async (post) => {
-    if (post) {
-      const image = await Metapost(post);
-      if (image) {
-        try {
-          const CreatedPlace = Moralis.Object.extend("Posts");
-          const newpost = new CreatedPlace();
-          if (user.attributes.ethAddress) {
-            newpost.set("owner", user.attributes.ethAddress);
-            if (post) {
-              newpost.set("image", image);
-              newpost.set("name", namepost);
-              newpost.set("description", descriptionpost);
-            }
-            await newpost.save();
-          }
-  
-          setShowCrop(true);
-          setX();
-          setTimeout(() => {
-            router.replace(
-              {
-                pathname: router.pathname,
-                query: { ...router.query, defaultIndex: 3 },
-              },
-              undefined,
-              { shallow: true }
-            );
-          }, 1500);
-
-        } catch (err) {
-          console.error(err);
-          alert("Verifique faça login novamente!");
-        }
-      }
-    }
-  };
-
+  const router = useRouter();
+  const ref = useRef();
   useEffect(() => {
     function handleClickOutside(event) {
       if (ref.current && !ref.current.contains(event.target)) {
+        ShareOnTapClose();
         setX(false);
       }
     }
@@ -74,9 +20,88 @@ function ModalPost({ post, keyModal, showElementpost }) {
     };
   }, []);
 
+  const [namepost, setNamepost] = useState("");
+  const [descriptionpost, setDescriptionpost] = useState("");
+  const [isTermsAccepted, setIsTermsAccepted] = useState(false);
+  const [showCrop, setShowCrop] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [nameNftError, setNameNftError] = useState("");
+  const [descriptionNftError, setDescriptionNftError] = useState("");
+  const [DoubleError, setDoubleError] = useState("");
+
+  const onSubmit = async (post) => {
+    setIsLoading(true);
+
+    if (!namepost || !descriptionpost) {
+      setDoubleError("This field cannot be empty");
+      console.error("Name and description cannot be empty");
+      setIsLoading(false);
+      return;
+    }
+    if (!namepost) {
+      setNameNftError("The Name field is mandatory.");
+      setIsLoading(false);
+      return;
+    }
+
+    if (!descriptionpost) {
+      setDescriptionNftError("The Description field is mandatory.");
+      setIsLoading(false);
+      return;
+    }
+    if (post) {
+      try {
+        const CreatedPlace = Moralis.Object.extend("Posts");
+        const newpost = new CreatedPlace();
+        if (user.attributes.ethAddress) {
+          newpost.set("owner", user.attributes.ethAddress);
+          if (post) {
+            newpost.set("image", post);
+            newpost.set("name", namepost);
+            newpost.set("description", descriptionpost);
+            newpost.set("repost", false);
+          }
+          await newpost.save();
+        }
+        setShowCrop(true);
+        setX();
+
+        setTimeout(() => {
+          const newRoutePathname = router.pathname === "/myprofile" ? router.pathname : "/myprofile";
+          router.replace(
+            {
+              pathname: newRoutePathname,
+              query: { ...router.query, defaultIndex: 2 },
+            },
+            undefined,
+            { shallow: true }
+          );
+        }, 1500);
+
+      } catch (err) {
+        console.log(err);
+        alert("Verifique faça login novamente!");
+      } finally {
+        setIsLoading(false);
+        setX();
+      }
+    }
+  };
+
+  const [xiX, setX] = useState();
+
+  useEffect(() => {
+    xMan();
+  }, [showElementPOST]);
+
+  function xMan() {
+    setX(!xiX);
+  }
+
   return (
     <>
-     {showCrop && <Post_true />}
+      {showCrop && <Post_true />}
       {xiX ? (
         <div className={"modal fade show block"} key={keyModal}>
           <div className="modal-dialog max-w-2xl">
@@ -108,6 +133,8 @@ function ModalPost({ post, keyModal, showElementpost }) {
                     value={namepost}
                     onChange={(e) => setNamepost(e.target.value)}
                   />
+                  <p className="text-red">{nameNftError}</p>
+                  <p className="text-red">{DoubleError}</p>
                 </div>
                 <div className="mb-2">
                   <label
@@ -129,11 +156,17 @@ function ModalPost({ post, keyModal, showElementpost }) {
                     value={descriptionpost}
                     onChange={(e) => setDescriptionpost(e.target.value)}
                   ></textarea>
+                  <p className="text-red">{descriptionNftError}</p>
+                  <p className="text-red">{DoubleError}</p>
                 </div>
                 {/* <!-- Terms --> */}
                 <div className="mt-4 flex items-center space-x-2">
                   <input
                     type="checkbox"
+                    checked={isTermsAccepted}
+                    onChange={(event) =>
+                      setIsTermsAccepted(event.target.checked)
+                    }
                     id="terms"
                     className="cursor-pointer checked:bg-accent dark:bg-jacarta-600 hover:bg-jacarta-700 text-accent border-jacarta-200 focus:ring-accent/20 dark:border-jacarta-500 h-5 w-5 self-start rounded focus:ring-offset-0"
                   />
@@ -152,9 +185,19 @@ function ModalPost({ post, keyModal, showElementpost }) {
               <div className="modal-footer p-over_10">
                 <div className="flex items-center justify-center space-x-4">
                   <button
-                    onClick={() => onSubmit(post)}
                     type="button"
-                    className="dark:hover:bg-jacarta-600 hover:bg-jacarta-50 border-jacarta-100 group flex items-center justify-center border bg-white transition-colors hover:border-transparent focus:border-transparent dark:border-transparent dark:bg-white/[.15] rounded-button py-3 px-8 text-center font-semibold text-white transition-all"
+                    onClick={() => onSubmit(post)}
+                    title={
+                      !isTermsAccepted
+                        ? "Please agree to the terms and conditions"
+                        : null
+                    }
+                    className={`dark:hover:bg-jacarta-600 hover:bg-jacarta-50 border-jacarta-100 group flex items-center justify-center border bg-white transition-colors hover:border-transparent focus:border-transparent dark:border-transparent dark:bg-white/[.15] rounded-button py-3 px-8 text-center font-semibold text-white transition-all ${
+                      !isTermsAccepted
+                        ? "disabled:opacity-50 cursor-not-allowed"
+                        : ""
+                    }`}
+                    disabled={!isTermsAccepted}
                   >
                     Create
                   </button>
@@ -164,7 +207,6 @@ function ModalPost({ post, keyModal, showElementpost }) {
           </div>
         </div>
       ) : null}
-
     </>
   );
 }
