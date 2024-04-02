@@ -379,12 +379,12 @@ const My_collection_itemPost = () => {
                       keyModal={showElementIndexNft}
                       showElementNFT={showElementNFT}
                     />
-                  ) : null}
+                  ) : null}  
                   {showElementIndexPost === index ? (
                     <ModalPost
                       post={post}
                       keyModal={showElementIndexPost}
-                      showElementPOST={showElementPOST}
+                      ActivePost={ActivePost}
                     />
                   ) : null}
                 </div>

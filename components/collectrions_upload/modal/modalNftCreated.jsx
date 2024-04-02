@@ -8,7 +8,7 @@ import { useQuery } from "react-query";
 import NFT_true from "../../modal/nft_sucefuly";
 import { useRouter } from "next/router";
 
-function ModalNft({ nft, keyModal, showElementNFT, itemActive }) {
+function ModalNft({ nft, keyModal, showElementNFT }) {
   const ref = useRef();
   useEffect(() => {
     function handleClickOutside(event) {

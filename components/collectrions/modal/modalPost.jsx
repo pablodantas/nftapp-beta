@@ -3,14 +3,13 @@ import { useMoralis } from "react-moralis";
 import Post_true from "../../modal/post_sucefuly";
 import { useRouter } from "next/router";
 
-function ModalPost({ post, keyModal, showElementPOST, ShareOnTapClose, postIdRepost, }) {
+function ModalPost({ post, keyModal, showElementPOST, ActivePost }) {
   const { Moralis, user } = useMoralis();
   const router = useRouter();
   const ref = useRef();
   useEffect(() => {
     function handleClickOutside(event) {
       if (ref.current && !ref.current.contains(event.target)) {
-        ShareOnTapClose();
         setX(false);
       }
     }
