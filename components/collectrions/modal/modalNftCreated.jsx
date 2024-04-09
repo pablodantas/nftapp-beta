@@ -55,28 +55,28 @@ function ModalNft({ nft, keyModal, showElementNFT, itemActive }) {
   }, [quantity]);
 
   // Assumindo que esta função está dentro de um componente React
-const onSubmit = async (nft) => {
-  setIsLoading(true);
-  if (!nameNft) {
-    setNameNftError("The Name field is mandatory.");
-    setIsLoading(false);
-    return;
-  }
+  const onSubmit = async (nft) => {
+    setIsLoading(true);
+    if (!nameNft) {
+      setNameNftError("The Name field is mandatory.");
+      setIsLoading(false);
+      return;
+    }
 
-  if (!descriptionNft) {
-    setDescriptionNftError("The Description field is mandatory.");
-    setIsLoading(false);
-    return;
-  }
+    if (!descriptionNft) {
+      setDescriptionNftError("The Description field is mandatory.");
+      setIsLoading(false);
+      return;
+    }
 
-  // Verifica a existência de variáveis críticas
-  if (!nft || !user?.attributes?.ethAddress) {
-    console.error("NFT ou endereço Ethereum do usuário não fornecido.");
-    setIsLoading(false);
-    return;
-  }
+    // Verifica a existência de variáveis críticas
+    if (!nft || !user?.attributes?.ethAddress) {
+      console.error("NFT ou endereço Ethereum do usuário não fornecido.");
+      setIsLoading(false);
+      return;
+    }
 
-  try {
+    try {
       const abi = [
         {
           path: "metadata.json",
@@ -95,38 +95,43 @@ const onSubmit = async (nft) => {
         return;
       }
 
-    // Inicializa Moralis e habilita Web3
-    const options = {
-      contractAddress: contractAddress,
-      functionName: "createToken",
-      abi: contractABI,
-      params: {
-        tokenURI: metadataUrl,
-      },
-    };
-    try {
-      const transaction = await Moralis.executeFunction(options);
-      await transaction.wait(); // Aguarda a transação ser confirmada
-      alert(`NFT successfully minted. Transaction hash - ${transaction.hash}`);
-      if (router) {
-        const newPath = "/myprofile";
-        setTimeout(() => {
-          router.replace({
-            pathname: newPath,
-            query: { ...router.query, defaultIndex: 3 },
-          }, undefined, { shallow: true });
-        }, 1500);
+      // Supondo que você tenha uma variável 'creationFee' com a taxa de criação em wei.
+      const creationFee = "1700000000000000"; // 0.0017 BNB para uma taxa de 1 dólar a uma taxa de câmbio hipotética.
+      console.log(creationFee);
+
+      const options = {
+        contractAddress: contractAddress,
+        functionName: "createToken",
+        abi: contractABI,
+        params: {
+          tokenURI: metadataUrl,
+        },
+        msgValue: creationFee, // Envia a taxa de criação junto com a chamada da função.
+      };
+
+      try {
+        const transaction = await Moralis.executeFunction(options);
+        await transaction.wait(); // Aguarda a transação ser confirmada
+        alert(`NFT successfully minted. Transaction hash - ${transaction.hash}`);
+        if (router) {
+          const newPath = "/myprofile";
+          setTimeout(() => {
+            router.replace({
+              pathname: newPath,
+              query: { ...router.query, defaultIndex: 3 },
+            }, undefined, { shallow: true });
+          }, 1500);
+        }
+        // Pode precisar ajustar a obtenção do tokenID baseado na resposta do seu contrato
+      } catch (error) {
+        console.error("An error occurred while minting the NFT:", error);
+        setIsLoading(false);
       }
-      // Pode precisar ajustar a obtenção do tokenID baseado na resposta do seu contrato
     } catch (error) {
-      console.error("An error occurred while minting the NFT:", error);
+      console.error(error);
       setIsLoading(false);
     }
-  } catch (error) {
-    console.error(error);
-    setIsLoading(false);
-  }
-};
+  };
 
 
   const [xiX, setX] = useState();
