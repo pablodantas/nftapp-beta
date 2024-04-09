@@ -17,7 +17,7 @@ import Error_page from './404'
 const queryClient = new QueryClient();
 
 const id = '001';
-const server = 'https://server-production-42cf.up.railway.app';
+const server = 'https://blackbuzz.up.railway.app';
 
 MoralisV1.initialize(id, `${server}/server`);
 MoralisV1.serverURL = `${server}/server`;
