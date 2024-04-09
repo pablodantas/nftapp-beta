@@ -21,7 +21,7 @@ const Login_button = () => {
 
   const handleLogin = async () => {
     setIsLoading(true);
-    const chain = '0x61';
+    const chain = '0x38';
     try {
       setAuthError(null);
       setIsAuthenticating(true);

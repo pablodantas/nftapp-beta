@@ -29,7 +29,7 @@ const My_collection_item_nftBlockChain = () => {
 
       params: {
         address: walletAddress,
-        chain: "bsc testnet",
+        chain: "bsc",
         format: "decimal",
         skip: toSkip,
         limit: pageSize,
