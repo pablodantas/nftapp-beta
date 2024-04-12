@@ -16,6 +16,7 @@ const Item = () => {
 
   const [nftBuy, setnftBuy] = useState();
   const [hist, setHist] = useState([]);
+  const [blockhash, setBlock] = useState([]);
 
   const fetchItem = async () => {
     try {
@@ -78,6 +79,8 @@ const Item = () => {
       setHist(history)
     }
   }, [history]);
+
+
 
   return (
     <>

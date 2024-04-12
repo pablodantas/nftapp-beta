@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useMoralis } from "react-moralis";
 import MetaNft from "./image";
-import Web3 from "web3";
-const web3 = new Web3(Web3.givenProvider);
 import NFT_true from "../../modal/nft_sucefuly";
 import { useRouter } from 'next/router';
+import { contractABI, contractAddress } from "../../../contractMarketPlace";
 
 
 function ModalNft({ nft, keyModal, showElementNFT }) {
-  const { Moralis, user } = useMoralis();
+
+  const { Moralis, user, enableWeb3 } = useMoralis();
+
   const router = useRouter();
   const [nameNft, setNameNft] = useState("");
   const [descriptionNft, setDescriptionNft] = useState("");
@@ -16,69 +17,239 @@ function ModalNft({ nft, keyModal, showElementNFT }) {
   const [isLoading, setIsLoading] = useState(false);
   const [value, setValue] = useState("");
 
+
+  const AproveActive = async (nft) => {
+    await enableWeb3();
+    try {
+
+      const optionsNft = {
+        contractAddress: "0x8a64030f84BDA05F406689Fe9EdC8354f2e58bc5",
+        functionName: "setApprovalForAll",
+        abi: [
+          {
+            "constant": false,
+            "inputs": [
+              {
+                "internalType": "address",
+                "name": "operator",
+                "type": "address"
+              },
+              {
+                "internalType": "bool",
+                "name": "approved",
+                "type": "bool"
+              }
+            ],
+            "name": "setApprovalForAll",
+            "outputs": [],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
+          }
+        ],
+        params: {
+          operator: "0x69d350358ad3e5c792AB0F2Ad04626AA2D929142",
+          approved: true,
+        },
+      };
+      const transaction = await Moralis.executeFunction(optionsNft);
+      await transaction.wait(); // Aguarda a transação ser confirmada
+      alert(`APROVE NFT successfully. Transaction hash - ${transaction.hash}`);
+
+      setIsTermsAccepted(true)
+    } catch (err) {
+      console.error(err);
+      alert("A transação falhou ou o login expirou. Tente novamente!");
+    }
+
+  }
+
   const handleChange = (event) => {
     const numericValue = event.target.value.replace(/[^0-9]/g, "");
     setValue(numericValue);
   };
   const [showCrop, setShowCrop] = useState(false);
-  // const contractABIMk = [
-  //   {
-  //     inputs: [
-  //       {
-  //         internalType: "address",
-  //         name: "nftContract",
-  //         type: "address",
-  //       },
-  //       {
-  //         internalType: "uint256",
-  //         name: "tokenId",
-  //         type: "uint256",
-  //       },
-  //       {
-  //         internalType: "uint256",
-  //         name: "price",
-  //         type: "uint256",
-  //       },
-  //     ],
-  //     name: "createMarketItem",
-  //     outputs: [],
-  //     stateMutability: "payable",
-  //     type: "function",
-  //   },
-  // ];
-
-  // const contractABIAprove = [
-  //   {
-  //     inputs: [
-  //       { internalType: "address", name: "operator", type: "address" },
-  //       { internalType: "bool", name: "approved", type: "bool" },
-  //     ],
-  //     name: "setApprovalForAll",
-  //     outputs: [],
-  //     stateMutability: "nonpayable",
-  //     type: "function",
-  //   },
-  // ];
 
   const onSubmit = async (nft) => {
+
+    const conversionRate = 1700000000000000; // 1 dólar = 1700000000000000 Wei
+    const valor = value * conversionRate;
+
+    await enableWeb3();
+
+
     const image = await MetaNft(nft.token_uri);
-    console.log(nft);
-    
-    if (image && nft && value > 0) {
+
+    if (image && nft.token_id && value > 0) {
+      const listingFee = "1700000000000000"; // 0.0017 BNB para uma taxa de 1 dólar a uma taxa de câmbio hipotética.
+
+      const options = {
+        contractAddress: "0x69d350358ad3e5c792AB0F2Ad04626AA2D929142",
+        functionName: "createMarketItem",
+        abi: [
+          {
+            "inputs": [
+              {
+                "internalType": "address",
+                "name": "nftContract",
+                "type": "address"
+              },
+              {
+                "internalType": "uint256",
+                "name": "tokenId",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "price",
+                "type": "uint256"
+              }
+            ],
+            "name": "createMarketItem",
+            "outputs": [],
+            "stateMutability": "payable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "address",
+                "name": "nftContract",
+                "type": "address"
+              },
+              {
+                "internalType": "uint256",
+                "name": "itemId",
+                "type": "uint256"
+              }
+            ],
+            "name": "createMarketSale",
+            "outputs": [],
+            "stateMutability": "payable",
+            "type": "function"
+          },
+          {
+            "inputs": [],
+            "stateMutability": "nonpayable",
+            "type": "constructor"
+          },
+          {
+            "anonymous": false,
+            "inputs": [
+              {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "itemId",
+                "type": "uint256"
+              },
+              {
+                "indexed": true,
+                "internalType": "address",
+                "name": "nftContract",
+                "type": "address"
+              },
+              {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "tokenId",
+                "type": "uint256"
+              },
+              {
+                "indexed": false,
+                "internalType": "address",
+                "name": "seller",
+                "type": "address"
+              },
+              {
+                "indexed": false,
+                "internalType": "address",
+                "name": "owner",
+                "type": "address"
+              },
+              {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "price",
+                "type": "uint256"
+              },
+              {
+                "indexed": false,
+                "internalType": "bool",
+                "name": "sold",
+                "type": "bool"
+              }
+            ],
+            "name": "MarketItemCreated",
+            "type": "event"
+          },
+          {
+            "anonymous": false,
+            "inputs": [
+              {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "itemId",
+                "type": "uint256"
+              },
+              {
+                "indexed": false,
+                "internalType": "address",
+                "name": "owner",
+                "type": "address"
+              }
+            ],
+            "name": "MarketItemSold",
+            "type": "event"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "uint256",
+                "name": "newFee",
+                "type": "uint256"
+              }
+            ],
+            "name": "updateListingFee",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [],
+            "name": "withdraw",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          }
+        ],
+        params: {
+          nftContract: "0x8a64030f84BDA05F406689Fe9EdC8354f2e58bc5",
+          tokenId: nft.token_id,
+          price: valor.toString(),
+        },
+        msgValue: listingFee,
+      };
+
+      // Executa a função do contrato e aguarda pela transação ser confirmada
+      const transaction = await Moralis.executeFunction(options);
+      const receipt = await transaction.wait()
+      alert(`Successfully. Transaction hash - ${transaction.hash}`);
+
+
       try {
         const Marketplace = Moralis.Object.extend("Marketplace");
         const query = new Moralis.Query(Marketplace);
         query.equalTo("token_address", nft.token_address);
         query.equalTo("token_id", parseInt(nft.token_id, 10));
         const myDetails = await query.first();
+
         if (myDetails) {
           myDetails.set("owner", nft.owner_of);
           if (nameNft) myDetails.set("name", nameNft);
           if (descriptionNft) myDetails.set("description", descriptionNft);
-          myDetails.set("valor", parseInt(value, 10))
+          myDetails.set("valor", parseInt(value, 10));
           await myDetails.save();
         } else {
-          const Marketplace = Moralis.Object.extend("Marketplace");
           const newMarketplace = new Marketplace();
           newMarketplace.set("minter_address", nft.minter_address);
           newMarketplace.set("collection", nft.name);
@@ -89,22 +260,23 @@ function ModalNft({ nft, keyModal, showElementNFT }) {
           newMarketplace.set("token_address", nft.token_address);
           newMarketplace.set("token_id", parseInt(nft.token_id, 10));
           newMarketplace.set("owner", nft.owner_of);
-          newMarketplace.set("valor", parseInt(value, 10))
+          newMarketplace.set("valor", parseInt(value, 10));
           if (image) {
             newMarketplace.set("image", image);
           }
           await newMarketplace.save();
-
         }
+
         setShowCrop(true);
         setX();
         router.push(`/${nft.token_address}/${nft.token_id}`);
       } catch (err) {
         console.error(err);
-        alert("Faça login novamente!");
+        alert("A transação falhou ou o login expirou. Tente novamente!");
       }
     }
   };
+
 
   const [xiX, setX] = useState();
 
@@ -118,7 +290,7 @@ function ModalNft({ nft, keyModal, showElementNFT }) {
 
   return (
     <>
-    {showCrop && <NFT_true />}
+      {showCrop && <NFT_true />}
       {xiX ? (
         <div>
           <div className={"modal fade show block"} key={keyModal}>
@@ -208,7 +380,7 @@ function ModalNft({ nft, keyModal, showElementNFT }) {
                           <img src="/images/logo_black.png" className="w-5" />
                         </span>
                         <span className="font-display text-jacarta-700 text-sm">
-                          $Buzz Coin
+                          $USDT
                         </span>
                       </div>
                     </div>
@@ -219,7 +391,7 @@ function ModalNft({ nft, keyModal, showElementNFT }) {
                       type="checkbox"
                       checked={isTermsAccepted}
                       onChange={(event) =>
-                        setIsTermsAccepted(event.target.checked)
+                        AproveActive(event.target.checked)
                       }
                       id="terms"
                       className="cursor-pointer checked:bg-accent dark:bg-jacarta-600 hover:bg-jacarta-700 text-accent border-jacarta-200 focus:ring-accent/20 dark:border-jacarta-500 h-5 w-5 self-start rounded focus:ring-offset-0"

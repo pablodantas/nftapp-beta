@@ -850,7 +850,7 @@ const NftAnuncio = ({ nft, itemI }) => {
                           Blockchain:
                         </span>
                         <span className="text-jacarta-700 dark:text-white">
-                          {'97'}
+                          {'56'}
                         </span>
                       </div>
                     </div>

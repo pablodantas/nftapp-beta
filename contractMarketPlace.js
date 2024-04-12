@@ -1,4 +1,4 @@
-export const contractAddressMarketPlace = "0xD3445dD8A61346Fd2f72e33C31d5E635935477C3";
+export const contractAddressMarketPlace = "0x69d350358ad3e5c792AB0F2Ad04626AA2D929142";
 export const contractABIMarketPlace = [
 	{
 		"inputs": [
@@ -115,66 +115,23 @@ export const contractABIMarketPlace = [
 		"type": "event"
 	},
 	{
-		"inputs": [],
-		"name": "fetchMarketItems",
-		"outputs": [
+		"inputs": [
 			{
-				"components": [
-					{
-						"internalType": "uint256",
-						"name": "itemId",
-						"type": "uint256"
-					},
-					{
-						"internalType": "address",
-						"name": "nftContract",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "tokenId",
-						"type": "uint256"
-					},
-					{
-						"internalType": "address payable",
-						"name": "seller",
-						"type": "address"
-					},
-					{
-						"internalType": "address payable",
-						"name": "owner",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "price",
-						"type": "uint256"
-					},
-					{
-						"internalType": "bool",
-						"name": "sold",
-						"type": "bool"
-					}
-				],
-				"internalType": "struct marketPlaceBoilerPlate.MarketItem[]",
-				"name": "",
-				"type": "tuple[]"
+				"internalType": "uint256",
+				"name": "newFee",
+				"type": "uint256"
 			}
 		],
-		"stateMutability": "view",
+		"name": "updateListingFee",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"inputs": [],
-		"name": "owner",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
+		"name": "withdraw",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	}
-];
+]

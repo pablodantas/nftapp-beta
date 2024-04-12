@@ -99,7 +99,7 @@ const Create_NFT = () => {
         const newNFTs = new NFTs();
         newNFTs.set("minter_address", user.attributes.ethAddress);
         newNFTs.set("collection", "BlackBuzz");
-        newNFTs.set("symbol", "Buzz Coin");
+        newNFTs.set("symbol", "USDT");
         newNFTs.set(
           "token_address",
           "0xf17e7382f937cd1204a674b87e2aa358cd027bf2"

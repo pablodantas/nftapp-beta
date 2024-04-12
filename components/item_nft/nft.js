@@ -12,7 +12,6 @@ import ProfileItem from "../itemInfo/ProfileItem";
 import Footer from "../footer";
 import ImageNFT from "../itemdalis/metadata/nftImage";
 import User_carousel from "../carousel/item_carousel";
-import Web3 from "web3";
 import Share from "../modal/share_modal_nft";
 import TimeAgo from "react-timeago";
 import Coments from "./comentarios/coments";
@@ -21,10 +20,12 @@ import { useQuery } from 'react-query';
 import Buy_quest from "./buy_question"
 import Buy_status from "./buy_status_modal"
 import ModalPost from "../../components/collectrions_upload/modal/modalPost"
+import { useWeb3ExecuteFunction } from "react-moralis";
+import Web3 from 'web3';
 
 const NftItem = ({ nft, tokenId, contract, history }) => {
 
-  const { Moralis, user } = useMoralis();
+  const { Moralis, user, enableWeb3 } = useMoralis();
   const [analyticsData, setAnalyticsData] = useState([]);
 
   const [showShare, setShowshare] = useState(false)
@@ -36,6 +37,20 @@ const NftItem = ({ nft, tokenId, contract, history }) => {
   const [BuyStatus, setBuyStatus] = useState();
   const [buyerrStatus, setBuyerrStatus] = useState("");
   const [CloseOk, setCloseOk] = useState(false);
+  const [nftItem, setNFtitem] = useState(false);
+
+  const fetchNFTItem = async () => {
+    if (walletAddress) {
+      const query = new Moralis.Query("MarketitemcreatedLogs");
+      query.equalTo("nftContract", contract);
+      query.equalTo("tokenId", tokenId.toString());
+      const result = await query.find();
+      const a = JSON.parse(JSON.stringify(result))
+      const b = a[0];
+      return b;
+    }
+  }
+
 
   const fetchOwner = async () => {
     if (nft) {
@@ -91,73 +106,239 @@ const NftItem = ({ nft, tokenId, contract, history }) => {
     }
   }, [history, nft]);
 
-  async function buy() {
-    setShowElementBuy(false);
-    setBuyStatus(true);
-    try {
-      if (!ganhador || !Perd || !nft) {
-        console.error("Erro: informações incompletas");
-        return;
-      }
 
-      const Ganha = Moralis.Object.extend("IfUser");
-      const ganhaDin = new Moralis.Query(Ganha);
-      ganhaDin.equalTo("postOwner", nft.owner);
-      const ganhadorObj = await ganhaDin.first();
-      if (!ganhadorObj) {
-        console.error("Erro: ganhador não encontrado");
-        return;
-      }
-      setBuyerrStatus("10%");
-      const newWalletBalance = parseInt(ganhador) + parseInt(nft.valor); // converte o valor para Number
-      ganhadorObj.set("carteira", newWalletBalance);
+  const buy = async () => {
+    await enableWeb3();
+    const itemId = await fetchNFTItem();
 
-      const Perder = Moralis.Object.extend("IfUser");
-      const perderDin = new Moralis.Query(Perder);
-      perderDin.equalTo("postOwner", walletAddress);
-      const perdObj = await perderDin.first();
-      if (!perdObj) {
-        console.error("Erro: perdedor não encontrado");
-        return;
-      }
-      setBuyerrStatus("30%");
-      const newWalletBalan = parseInt(Perd) - parseInt(nft.valor); // converte o valor para Number
-      perdObj.set("carteira", newWalletBalan);
+    const nftId = itemId?.itemId;
+    const price = itemId?.price;
 
-      if (!contract || !tokenId || !nft.valor || !walletAddress || !nft.owner) {
-        console.error("Erro: informações incompletas");
-        return;
-      }
-      setBuyerrStatus("60%");
-      const HistoryNft = Moralis.Object.extend("HistoryNft");
-      const queryHistory = new HistoryNft();
-      queryHistory.set("token_address", contract);
-      queryHistory.set("token_id", parseInt(nft.token_id, 10));
-      queryHistory.set("event", 'Sale');
-      queryHistory.set("from", nft.owner);
-      queryHistory.set("valor", nft.valor);
+    const listingFee = price;
 
-      setBuyerrStatus("80%");
-      const Marketplace = Moralis.Object.extend("Marketplace");
-      const query = new Moralis.Query(Marketplace);
-      query.equalTo("token_address", contract);
-      query.equalTo("token_id", tokenId);
-      const uploadDelete = await query.first();
-      if (uploadDelete) {
-        await uploadDelete.destroy();
-        console.log("Excluído com sucesso!");
-      } else {
-        console.log("Não foi possível encontrar o item no mercado.");
+    if(nftId && price && itemId){
+      const options = {
+        contractAddress: "0x69d350358ad3e5c792AB0F2Ad04626AA2D929142",
+        functionName: "createMarketSale",
+        abi: [
+          {
+            "inputs": [
+              {
+                "internalType": "address",
+                "name": "nftContract",
+                "type": "address"
+              },
+              {
+                "internalType": "uint256",
+                "name": "tokenId",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "price",
+                "type": "uint256"
+              }
+            ],
+            "name": "createMarketItem",
+            "outputs": [],
+            "stateMutability": "payable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "address",
+                "name": "nftContract",
+                "type": "address"
+              },
+              {
+                "internalType": "uint256",
+                "name": "itemId",
+                "type": "uint256"
+              }
+            ],
+            "name": "createMarketSale",
+            "outputs": [],
+            "stateMutability": "payable",
+            "type": "function"
+          },
+          {
+            "inputs": [],
+            "stateMutability": "nonpayable",
+            "type": "constructor"
+          },
+          {
+            "anonymous": false,
+            "inputs": [
+              {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "itemId",
+                "type": "uint256"
+              },
+              {
+                "indexed": true,
+                "internalType": "address",
+                "name": "nftContract",
+                "type": "address"
+              },
+              {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "tokenId",
+                "type": "uint256"
+              },
+              {
+                "indexed": false,
+                "internalType": "address",
+                "name": "seller",
+                "type": "address"
+              },
+              {
+                "indexed": false,
+                "internalType": "address",
+                "name": "owner",
+                "type": "address"
+              },
+              {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "price",
+                "type": "uint256"
+              },
+              {
+                "indexed": false,
+                "internalType": "bool",
+                "name": "sold",
+                "type": "bool"
+              }
+            ],
+            "name": "MarketItemCreated",
+            "type": "event"
+          },
+          {
+            "anonymous": false,
+            "inputs": [
+              {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "itemId",
+                "type": "uint256"
+              },
+              {
+                "indexed": false,
+                "internalType": "address",
+                "name": "owner",
+                "type": "address"
+              }
+            ],
+            "name": "MarketItemSold",
+            "type": "event"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "uint256",
+                "name": "newFee",
+                "type": "uint256"
+              }
+            ],
+            "name": "updateListingFee",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [],
+            "name": "withdraw",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          }
+        ],
+        params: {
+          nftContract: contract,
+          itemId: nftId?.toString(),
+          price: listingFee?.toString(),
+        },
+        msgValue: listingFee?.toString(),
+      };
+      const transaction = await Moralis.executeFunction(options);
+      const receipt = await transaction.wait()
+      alert(`Successfully. Transaction hash - ${transaction.hash}`);
+  
+      setShowElementBuy(false);
+      setBuyStatus(true);
+      try {
+        if (!ganhador || !Perd || !nft) {
+          console.error("Erro: informações incompletas");
+          return;
+        }
+  
+        const Ganha = Moralis.Object.extend("IfUser");
+        const ganhaDin = new Moralis.Query(Ganha);
+        ganhaDin.equalTo("postOwner", nft.owner);
+        const ganhadorObj = await ganhaDin.first();
+        if (!ganhadorObj) {
+          console.error("Erro: ganhador não encontrado");
+          return;
+        }
+        setBuyerrStatus("10%");
+        const newWalletBalance = parseInt(ganhador) + parseInt(nft.valor); // converte o valor para Number
+        ganhadorObj.set("carteira", newWalletBalance);
+  
+        const Perder = Moralis.Object.extend("IfUser");
+        const perderDin = new Moralis.Query(Perder);
+        perderDin.equalTo("postOwner", walletAddress);
+        const perdObj = await perderDin.first();
+        if (!perdObj) {
+          console.error("Erro: perdedor não encontrado");
+          return;
+        }
+        setBuyerrStatus("30%");
+        const newWalletBalan = parseInt(Perd) - parseInt(nft.valor); // converte o valor para Number
+        perdObj.set("carteira", newWalletBalan);
+  
+        if (!contract || !tokenId || !nft.valor || !walletAddress || !nft.owner) {
+          console.error("Erro: informações incompletas");
+          return;
+        }
+        setBuyerrStatus("60%");
+        const HistoryNft = Moralis.Object.extend("HistoryNft");
+        const queryHistory = new HistoryNft();
+        queryHistory.set("token_address", contract);
+        queryHistory.set("token_id", parseInt(nft.token_id, 10));
+        queryHistory.set("event", 'Sale');
+        queryHistory.set("from", nft.owner);
+        queryHistory.set("valor", nft.valor);
+  
+        setBuyerrStatus("80%");
+        const Marketplace = Moralis.Object.extend("Marketplace");
+        const query = new Moralis.Query(Marketplace);
+        query.equalTo("token_address", contract);
+        query.equalTo("token_id", tokenId);
+        const uploadDelete = await query.first();
+  
+  
+        if (uploadDelete) {
+          await uploadDelete.destroy();
+          console.log("Excluído com sucesso!");
+        } else {
+          console.log("Não foi possível encontrar o item no mercado.");
+        }
+        await ganhadorObj.save();
+        await perdObj.save();
+        await queryHistory.save();
+        setBuyerrStatus("100%");
+      } catch (err) {
+        console.error(err);
       }
-      await ganhadorObj.save();
-      await perdObj.save();
-      await queryHistory.save();
-      setBuyerrStatus("100%");
-    } catch (err) {
-      console.error(err);
+      setBuyerrStatus("100% - Purchase made successfully!");
     }
-    setBuyerrStatus("100% - Purchase made successfully!");
-  }
+
+
+  };
+
 
   const HandleShare = () => {
     if (showShare === false) {
@@ -406,7 +587,7 @@ const NftItem = ({ nft, tokenId, contract, history }) => {
 
                 <div className="mb-8 flex items-center space-x-4 whitespace-nowrap">
                   <div className="flex items-center">
-                    <Tippy content={<span>$Buzz Coin</span>}>
+                    <Tippy content={<span>$USDT</span>}>
                       <span className=" dark:border-jacarta-600 border-jacarta-100 flex items-center whitespace-nowrap rounded-md  py-1 px-2 -ml-1 mr-1">
                         <img
                           src="/images/logo_black.png"
@@ -416,7 +597,7 @@ const NftItem = ({ nft, tokenId, contract, history }) => {
                       </span>
                     </Tippy>
                     <span className="text-green text-sm font-medium tracking-tight">
-                      {nft?.valor} $Buzz Coin
+                      {nft?.valor} $USDT
                     </span>
                   </div>
                   <span className="dark:text-jacarta-300 text-jacarta-400 text-sm">
@@ -528,7 +709,7 @@ const NftItem = ({ nft, tokenId, contract, history }) => {
                       <div className="mt-3 flex">
                         <div>
                           <div className="flex items-center whitespace-nowrap">
-                            <Tippy content={<span>$Buzz Coin</span>}>
+                            <Tippy content={<span>$USDT</span>}>
                               <span className=" dark:border-jacarta-600 border-jacarta-100 flex items-center whitespace-nowrap rounded-md  py-1 px-2 -ml-1 mr-1">
                                 <img
                                   src="/images/logo_black.png"
@@ -538,7 +719,7 @@ const NftItem = ({ nft, tokenId, contract, history }) => {
                               </span>
                             </Tippy>
                             <span className="text-green text-lg font-medium leading-tight tracking-tight">
-                              {nft?.valor} $Buzz Coin
+                              {nft?.valor} $USDT
                             </span>
                           </div>
                         </div>
@@ -711,7 +892,7 @@ const NftItem = ({ nft, tokenId, contract, history }) => {
                           Blockchain:
                         </span>
                         <span className="text-jacarta-700 dark:text-white">
-                          {'97'}
+                          {'56'}
                         </span>
                       </div>
                     </div>

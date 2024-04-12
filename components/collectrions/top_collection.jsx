@@ -154,7 +154,7 @@ const Top_collection = () => {
 												</span>
 											</a>
 										</Link>
-										<span className="dark:text-jacarta-300 text-sm">{amount} $Buzz Coin</span>
+										<span className="dark:text-jacarta-300 text-sm">{amount} $USDT</span>
 									</div>
 								</div>
 							);
